@@ -1,7 +1,14 @@
 from PIL import Image
 from PIL import ImageFont
 from PIL import ImageDraw
+
+from io import BytesIO
+
 import textwrap
+
+from telegram.ext import Updater
+from telegram.ext import CommandHandler
+from telegram import ParseMode
 
 MAX_CHAR_16 = 7
 MAX_CHAR_12 = 20
@@ -14,7 +21,7 @@ def draw_multiple_lines(msg, font, x1, x2, current_h):
         draw.text((x, current_h), line, font=font, fill="black")
         current_h += h + pad
 
-def template(msg):
+def generate_image(msg):
     img = Image.open("img-base.png")
     global draw
     global x
@@ -25,7 +32,6 @@ def template(msg):
     x2 = 572
     pad = 2
     width = len(msg)
-    print(width)
     if width<=MAX_CHAR_16:
         font = ImageFont.truetype("jarmstrongbold.ttf", 16)
         w,h = font.getsize(msg)
@@ -59,3 +65,10 @@ def template(msg):
         draw_multiple_lines(msg_wrapped, font, x1, x2, current_h)
     #img.save('sample-out.png')
     return img
+
+def get_image_bio(img):
+    bio = BytesIO()
+    bio.name = 'image.jpeg'
+    img.save(bio, 'JPEG', quality=100)
+    bio.seek(0)
+    return bio
