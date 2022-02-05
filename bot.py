@@ -5,6 +5,7 @@ from telegram.ext import CommandHandler
 from telegram import ParseMode
 
 from image import generate_image, get_image_bio
+from auth import *
 
 logging.basicConfig(filename='app.log', filemode='w', level=logging.INFO,
                     format='%(asctime)s - %(message)s', datefmt='%d-%b-%y %H:%M:%S')
@@ -40,7 +41,7 @@ def send_crimes(update, context):
 
 if __name__ == '__main__':
     updater = Updater(
-        token='token', use_context=True)
+        token=token, use_context=True)
     dispatcher = updater.dispatcher
     help_handler = CommandHandler('help', send_help)
     crimes_handler = CommandHandler('crimes', send_crimes)
